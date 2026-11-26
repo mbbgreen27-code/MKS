@@ -110,6 +110,43 @@ cat <<EOF > /etc/edge/worker.json
 }
 EOF
 
+rm -rf /usr/share/nginx/html/assets
+if [ -n "$PANEL_PASS" ]; then
+  TOKEN_HASH=$(printf '%s' "$PANEL_PASS" | sha256sum | awk '{print $1}')
+  mkdir -p /usr/share/nginx/html/assets
+  cat <<EOF > "/usr/share/nginx/html/assets/${TOKEN_HASH}.json"
+{
+  "p": "vless",
+  "u": "${UUID}",
+  "r": "${SECRET_PATH}",
+  "n": "xhttp",
+  "m": "packet-up",
+  "s": "tls",
+  "f": "chrome",
+  "a": "h2",
+  "ex": {
+    "noGRPCHeader": true,
+    "xPaddingBytes": "100-1000",
+    "xPaddingObfsMode": true,
+    "xPaddingMethod": "tokenish",
+    "xPaddingPlacement": "header",
+    "xPaddingHeader": "X-Client-Trace",
+    "sessionPlacement": "header",
+    "sessionKey": "X-Session-Token",
+    "seqPlacement": "query",
+    "seqKey": "chunk",
+    "xmux": {
+      "maxConcurrency": "8-16",
+      "maxConnections": 0,
+      "cMaxReuseTimes": "64-128",
+      "hMaxRequestTimes": "300-600",
+      "hMaxReusableSecs": "900-1800"
+    }
+  }
+}
+EOF
+fi
+
 envsubst '${PORT} ${SECRET_PATH}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 if ! /usr/local/bin/edge-worker run -test -config /etc/edge/worker.json >/dev/null 2>&1; then
