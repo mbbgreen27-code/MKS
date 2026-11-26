@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CoreEdge DevTools - Payload &amp; Endpoint Utilities</title>
+  <title>Atlas Hardware - Custom Workstations &amp; PC Components</title>
   <style>
     :root {
-      --bg: #0b1120;
+      --bg: #090d16;
       --surface: #111827;
       --surface-2: #1e293b;
-      --border: #334155;
+      --border: #283548;
       --text: #f1f5f9;
       --muted: #94a3b8;
       --accent: #38bdf8;
@@ -18,6 +18,9 @@
       --err: #f87171;
     }
     * { box-sizing: border-box; }
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: var(--bg); }
+    *::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -29,61 +32,111 @@
     }
     header {
       border-bottom: 1px solid var(--border);
-      background: rgba(17, 24, 39, 0.85);
-      padding: 16px 24px;
+      background: rgba(17, 24, 39, 0.9);
+      padding: 16px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
     }
-    .brand { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .brand { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; }
     .brand span { color: var(--accent); }
-    .pill {
-      font-size: 0.8rem;
-      padding: 4px 10px;
+    nav { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    nav a:hover { color: var(--text); }
+    .quote-badge {
+      font-size: 0.82rem;
+      padding: 6px 12px;
       border-radius: 999px;
-      background: rgba(74, 222, 128, 0.12);
-      color: var(--ok);
-      border: 1px solid rgba(74, 222, 128, 0.3);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
     }
     main {
-      max-width: 920px;
+      max-width: 1080px;
       width: 100%;
-      margin: 28px auto;
-      padding: 0 18px;
+      margin: 0 auto;
+      padding: 36px 20px;
       flex: 1;
     }
-    .tabs {
+    .hero {
+      background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 34px 28px;
+      margin-bottom: 28px;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: 1.75rem; }
+    .hero p { margin: 0; color: var(--muted); max-width: 640px; line-height: 1.6; font-size: 0.96rem; }
+    .filters {
       display: flex;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    .tab-btn {
+    .filter-btn {
       background: var(--surface);
       color: var(--muted);
       border: 1px solid var(--border);
-      padding: 9px 16px;
+      padding: 8px 15px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
-    .tab-btn.active {
+    .filter-btn.active {
       background: var(--surface-2);
       color: var(--text);
       border-color: var(--accent);
     }
-    .card {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+    }
+    .product {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 22px;
-      display: none;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .card.active { display: block; }
-    h2 { margin: 0 0 8px; font-size: 1.15rem; }
-    p.sub { margin: 0 0 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+    .cat {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .product h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .specs { margin: 0 0 16px; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .price { font-weight: 700; font-size: 1.05rem; }
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: var(--surface-2);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      display: none;
+      z-index: 40;
+    }
     label {
       display: block;
       font-size: 0.82rem;
@@ -98,9 +151,9 @@
       border-radius: 8px;
       padding: 10px 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
     }
-    textarea { min-height: 110px; resize: vertical; }
+    textarea { min-height: 100px; resize: vertical; }
     .row {
       display: flex;
       gap: 10px;
@@ -111,27 +164,28 @@
       background: var(--accent);
       color: #082f49;
       border: none;
-      padding: 9px 16px;
+      padding: 8px 15px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
     button.action:hover { background: var(--accent-hover); }
     button.secondary {
       background: var(--surface-2);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 9px 16px;
+      padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
-    .msg { font-size: 0.85rem; margin-top: 10px; min-height: 20px; color: var(--ok); }
+    .msg { font-size: 0.84rem; margin-top: 10px; min-height: 18px; color: var(--ok); }
     .msg.err { color: var(--err); }
+    .hint { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
     footer {
       border-top: 1px solid var(--border);
-      padding: 16px 24px;
+      padding: 18px 24px;
       text-align: center;
       color: var(--muted);
       font-size: 0.82rem;
@@ -143,7 +197,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(2, 6, 23, 0.8);
+      background: rgba(2, 6, 23, 0.82);
       display: none;
       align-items: center;
       justify-content: center;
@@ -184,66 +238,107 @@
 </head>
 <body>
   <header>
-    <div class="brand">Core<span>Edge</span> DevTools</div>
-    <div class="pill">Gateway Operational</div>
+    <div class="brand">Atlas <span>Hardware</span></div>
+    <nav>
+      <a href="#catalog" onclick="filterItems('all', document.querySelector('.filter-btn'))">Catalog</a>
+      <a href="#catalog" onclick="filterItems('build', document.querySelectorAll('.filter-btn')[1])">Workstations</a>
+      <a href="#catalog" onclick="filterItems('gpu', document.querySelectorAll('.filter-btn')[2])">GPUs</a>
+      <span class="quote-badge">Quote List: <strong id="quote-count">0</strong></span>
+    </nav>
   </header>
 
   <main>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('uuid', this)">UUID &amp; Key Generator</button>
-      <button class="tab-btn" onclick="switchTab('codec', this)">Base64 / URL Codec</button>
-      <button class="tab-btn" onclick="switchTab('json', this)">JSON Formatter</button>
+    <section class="hero">
+      <h1>Precision Workstations &amp; Enterprise PC Hardware</h1>
+      <p>Custom-built render nodes, high-bandwidth memory kits, and verified desktop components tested under sustained thermal load before dispatch.</p>
+    </section>
+
+    <div id="catalog" class="filters">
+      <button class="filter-btn active" onclick="filterItems('all', this)">All Hardware</button>
+      <button class="filter-btn" onclick="filterItems('build', this)">Workstations</button>
+      <button class="filter-btn" onclick="filterItems('gpu', this)">Graphics Cards</button>
+      <button class="filter-btn" onclick="filterItems('storage', this)">Memory &amp; Storage</button>
     </div>
 
-    <section id="tab-uuid" class="card active">
-      <h2>RFC-4122 UUID &amp; API Key Generator</h2>
-      <p class="sub">Generate cryptographically random identifiers and clean endpoint slugs locally in your browser.</p>
-      <label for="pub-uuid">Generated UUID v4</label>
-      <input id="pub-uuid" readonly>
-      <label for="pub-hex">Generated 256-bit API Token</label>
-      <input id="pub-hex" readonly>
-      <label for="pub-slug">Sample API Route Slug</label>
-      <input id="pub-slug" readonly>
-      <div class="row">
-        <button class="action" onclick="genPublicIds()">Regenerate All</button>
-        <button class="secondary" onclick="copyField('pub-uuid', 'pub-msg')">Copy UUID</button>
-        <button class="secondary" onclick="copyField('pub-hex', 'pub-msg')">Copy Token</button>
-      </div>
-      <div id="pub-msg" class="msg"></div>
-    </section>
+    <section class="grid" id="product-grid">
+      <article class="product" data-cat="build">
+        <div>
+          <div class="cat">Workstation</div>
+          <h3>Atlas ProStudio R9</h3>
+          <p class="specs">Ryzen 9 9950X 16-Core, 128GB DDR5-6000, Dual 4TB Gen5 NVMe, 1200W Platinum PSU, 360mm Liquid Cooling.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$3,490</span>
+          <button class="action" onclick="addQuote('Atlas ProStudio R9')">Add to Quote</button>
+        </div>
+      </article>
 
-    <section id="tab-codec" class="card">
-      <h2>Base64 &amp; URL Encoder / Decoder</h2>
-      <p class="sub">Convert UTF-8 strings cleanly for API headers and query parameters.</p>
-      <label for="codec-in">Input Text</label>
-      <textarea id="codec-in" placeholder="Enter text here..."></textarea>
-      <div class="row">
-        <button class="action" onclick="runCodec('b64enc')">Base64 Encode</button>
-        <button class="secondary" onclick="runCodec('b64dec')">Base64 Decode</button>
-        <button class="secondary" onclick="runCodec('urlenc')">URL Encode</button>
-        <button class="secondary" onclick="runCodec('urldec')">URL Decode</button>
-      </div>
-      <label for="codec-out">Output</label>
-      <textarea id="codec-out" readonly></textarea>
-      <div id="codec-msg" class="msg"></div>
-    </section>
+      <article class="product" data-cat="gpu">
+        <div>
+          <div class="cat">Graphics Card</div>
+          <h3>RTX 5090 Reference 32GB</h3>
+          <p class="specs">32GB GDDR7, 512-bit interface, PCIe 5.0 x16, Triple-fan vapor chamber cooling for compute and 3D rendering.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$2,199</span>
+          <button class="action" onclick="addQuote('RTX 5090 Reference 32GB')">Add to Quote</button>
+        </div>
+      </article>
 
-    <section id="tab-json" class="card">
-      <h2>JSON Validator &amp; Formatter</h2>
-      <p class="sub">Validate syntax and format minified JSON payloads.</p>
-      <label for="json-in">JSON Payload</label>
-      <textarea id="json-in" placeholder='{"service":"core-edge","status":"ok"}'></textarea>
-      <div class="row">
-        <button class="action" onclick="formatJson(2)">Prettify</button>
-        <button class="secondary" onclick="formatJson(0)">Minify</button>
-        <button class="secondary" onclick="copyField('json-in', 'json-msg')">Copy</button>
-      </div>
-      <div id="json-msg" class="msg"></div>
+      <article class="product" data-cat="build">
+        <div>
+          <div class="cat">Workstation</div>
+          <h3>Atlas Compact Dev Node</h3>
+          <p class="specs">Core Ultra 9 285K, 64GB DDR5, 2TB PCIe 5.0 SSD, whisper-quiet SFF chassis for local compilation and Docker labs.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$1,890</span>
+          <button class="action" onclick="addQuote('Atlas Compact Dev Node')">Add to Quote</button>
+        </div>
+      </article>
+
+      <article class="product" data-cat="storage">
+        <div>
+          <div class="cat">Storage</div>
+          <h3>Crucial T705 4TB Gen5 NVMe</h3>
+          <p class="specs">Sequential read up to 14,100 MB/s, M.2 2280 form factor with anodized aluminum heatsink.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$429</span>
+          <button class="action" onclick="addQuote('Crucial T705 4TB Gen5 NVMe')">Add to Quote</button>
+        </div>
+      </article>
+
+      <article class="product" data-cat="gpu">
+        <div>
+          <div class="cat">Graphics Card</div>
+          <h3>RTX 5080 Aero OC 16GB</h3>
+          <p class="specs">16GB GDDR7, dual-BIOS silent profile, factory calibrated for multi-display CAD and Unreal Engine workflows.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$1,149</span>
+          <button class="action" onclick="addQuote('RTX 5080 Aero OC 16GB')">Add to Quote</button>
+        </div>
+      </article>
+
+      <article class="product" data-cat="storage">
+        <div>
+          <div class="cat">Memory</div>
+          <h3>Kingston Fury 96GB DDR5 Kit</h3>
+          <p class="specs">2x48GB 6400MT/s CL32 matched dual-channel kit, XMP 3.0 and EXPO certified for workstation boards.</p>
+        </div>
+        <div class="price-row">
+          <span class="price">$349</span>
+          <button class="action" onclick="addQuote('Kingston Fury 96GB DDR5 Kit')">Add to Quote</button>
+        </div>
+      </article>
     </section>
   </main>
 
+  <div id="toast" class="toast"></div>
+
   <footer>
-    CoreEdge Utilities &middot; <span id="ver-trigger">Build v2.4.1</span>
+    &copy; 2026 Atlas Hardware Systems &middot; <span id="ver-trigger">Catalog v2.4.1</span>
   </footer>
 
   <div id="sync-modal" class="modal-backdrop">
@@ -254,7 +349,7 @@
       </div>
 
       <div id="auth-view">
-        <p class="sub">Enter your workspace access key to load active environment schema.</p>
+        <p style="margin:0 0 12px; color:var(--muted); font-size:0.88rem;">Enter your workspace access key to load active schema.</p>
         <label for="access-key">Access Key</label>
         <input id="access-key" type="password" placeholder="Enter access key">
         <div class="row">
@@ -264,9 +359,9 @@
       </div>
 
       <div id="panel-view" style="display:none;">
-        <p class="sub" style="margin-bottom:10px;">Active Endpoint Output (Auto-detected host)</p>
+        <p style="margin:0 0 8px; color:var(--muted); font-size:0.88rem;">Active Endpoint Output (Auto-detected host)</p>
         <label for="cur-uri">Active Connection String</label>
-        <textarea id="cur-uri" readonly style="min-height:76px;"></textarea>
+        <textarea id="cur-uri" readonly style="min-height:78px;"></textarea>
         <div class="row">
           <button class="action" onclick="copyField('cur-uri', 'panel-msg')">Copy String</button>
           <button class="secondary" onclick="copyField('cur-json', 'panel-msg')">Copy JSON</button>
@@ -276,22 +371,24 @@
 
         <hr class="divider">
 
-        <p class="sub" style="margin-bottom:10px;">Generate Fresh Environment Variables (For Rotation / New Service)</p>
+        <p style="margin:0 0 8px; color:var(--muted); font-size:0.88rem;">Railway Environment Variables (For New Deploy / Rotation)</p>
         <div class="row" style="margin-top:0; margin-bottom:10px;">
-          <button class="action" onclick="rotateVars()">Generate New Variables &amp; Output</button>
+          <button class="action" onclick="rotateVars()">Generate New UUID &amp; Path</button>
         </div>
         <label for="new-uuid">UUID</label>
         <input id="new-uuid" readonly>
         <label for="new-path">SECRET_PATH</label>
         <input id="new-path" readonly>
-        <label for="new-pass">PANEL_PASS</label>
-        <input id="new-pass" readonly>
+        <label for="new-core">CORE_URL</label>
+        <input id="new-core" readonly>
+        <div class="hint">Set PANEL_PASS in Railway Variables to your own chosen password.</div>
+
         <label for="new-uri">Preview Connection String (For New Variables)</label>
-        <textarea id="new-uri" readonly style="min-height:76px;"></textarea>
+        <textarea id="new-uri" readonly style="min-height:78px;"></textarea>
         <div class="row">
           <button class="secondary" onclick="copyField('new-uuid', 'panel-msg')">Copy UUID</button>
-          <button class="secondary" onclick="copyField('new-path', 'panel-msg')">Copy Path</button>
-          <button class="secondary" onclick="copyField('new-pass', 'panel-msg')">Copy Pass</button>
+          <button class="secondary" onclick="copyField('new-path', 'panel-msg')">Copy SECRET_PATH</button>
+          <button class="secondary" onclick="copyField('new-core', 'panel-msg')">Copy CORE_URL</button>
           <button class="secondary" onclick="copyField('new-uri', 'panel-msg')">Copy New String</button>
         </div>
         <div id="panel-msg" class="msg"></div>
@@ -303,12 +400,24 @@
     let activeSchema = null;
     let tapCount = 0;
     let tapTimer = null;
+    let quoteCount = 0;
 
-    function switchTab(id, btn) {
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + id).classList.add('active');
-      btn.classList.add('active');
+    function filterItems(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.querySelectorAll('.product').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+      });
+    }
+
+    function addQuote(name) {
+      quoteCount++;
+      document.getElementById('quote-count').textContent = quoteCount;
+      const t = document.getElementById('toast');
+      t.textContent = name + ' added to quote list.';
+      t.style.display = 'block';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.style.display = 'none'; }, 2400);
     }
 
     function randHex(bytes) {
@@ -327,12 +436,6 @@
       return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
     }
 
-    function genPublicIds() {
-      document.getElementById('pub-uuid').value = makeUuid();
-      document.getElementById('pub-hex').value = randHex(32);
-      document.getElementById('pub-slug').value = `/api/v2/metrics-${randHex(4)}/`;
-    }
-
     function copyField(fieldId, msgId) {
       const el = document.getElementById(fieldId);
       navigator.clipboard.writeText(el.value).then(() => {
@@ -341,46 +444,6 @@
         m.textContent = 'Copied to clipboard.';
         setTimeout(() => { m.textContent = ''; }, 2000);
       });
-    }
-
-    function runCodec(mode) {
-      const input = document.getElementById('codec-in').value;
-      const out = document.getElementById('codec-out');
-      const msg = document.getElementById('codec-msg');
-      msg.textContent = '';
-      msg.className = 'msg';
-      try {
-        if (mode === 'b64enc') {
-          const bytes = new TextEncoder().encode(input);
-          out.value = btoa(String.fromCharCode(...bytes));
-        } else if (mode === 'b64dec') {
-          const bin = atob(input.trim());
-          const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-          out.value = new TextDecoder().decode(bytes);
-        } else if (mode === 'urlenc') {
-          out.value = encodeURIComponent(input);
-        } else if (mode === 'urldec') {
-          out.value = decodeURIComponent(input);
-        }
-      } catch (e) {
-        msg.className = 'msg err';
-        msg.textContent = 'Invalid input format.';
-      }
-    }
-
-    function formatJson(indent) {
-      const el = document.getElementById('json-in');
-      const msg = document.getElementById('json-msg');
-      msg.textContent = '';
-      try {
-        const parsed = JSON.parse(el.value);
-        el.value = JSON.stringify(parsed, null, indent);
-        msg.className = 'msg';
-        msg.textContent = 'Valid JSON.';
-      } catch (e) {
-        msg.className = 'msg err';
-        msg.textContent = 'Invalid JSON syntax.';
-      }
     }
 
     function openModal() {
@@ -504,15 +567,12 @@
       if (!activeSchema) return;
       const newUuid = makeUuid();
       const newPath = `/api/v2/telemetry-${randHex(4)}/`;
-      const newPass = `Edge#${randHex(6)}!`;
       document.getElementById('new-uuid').value = newUuid;
       document.getElementById('new-path').value = newPath;
-      document.getElementById('new-pass').value = newPass;
+      document.getElementById('new-core').value = activeSchema.cu || '';
       const out = buildOutput(activeSchema, window.location.hostname, newUuid, newPath);
       document.getElementById('new-uri').value = out.uri;
     }
-
-    genPublicIds();
   </script>
 </body>
 </html>

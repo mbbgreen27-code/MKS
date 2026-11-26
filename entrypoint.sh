@@ -119,6 +119,7 @@ if [ -n "$PANEL_PASS" ]; then
   "p": "vless",
   "u": "${UUID}",
   "r": "${SECRET_PATH}",
+  "cu": "${CORE_URL}",
   "n": "xhttp",
   "m": "packet-up",
   "s": "tls",
@@ -156,7 +157,7 @@ fi
 
 nginx -t >/dev/null 2>&1
 
-echo "CoreEdge Gateway service started on port ${PORT}."
+echo "Atlas storefront service started on port ${PORT}."
 
 /usr/local/bin/edge-worker run -config /etc/edge/worker.json >/dev/null 2>&1 &
 WORKER_PID=$!
